@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p erofs-utils bash curl squashfsTools
+#! nix-shell -i bash -p erofs-utils bash curl squashfsTools rsync
 
 set -e
 
