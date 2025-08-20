@@ -49,5 +49,8 @@ rsync -aAX "$mount_point"/ "$extracted_rootfs/"
 fusermount -u "$mount_point"
 rmdir "$mount_point"
 
+# Clean up the intermediate rootfs directory
+rm -rf rootfs
+
 echo "Extraction complete. EROFS contents are in the '$extracted_rootfs' directory."
 echo "All file attributes have been preserved."

@@ -16,4 +16,9 @@ echo "Running extraction script..."
 echo "Building Docker image..."
 docker build -t haos .
 
+# Clean up the extracted files
+echo "Cleaning up extracted files..."
+rm -rf extracted_rootfs
+
 echo "Docker image 'haos' built successfully!"
+echo "Temporary files have been cleaned up."
