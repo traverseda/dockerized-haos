@@ -16,4 +16,30 @@ fi
 echo "Extracting $filename..."
 unsquashfs -f -d rootfs "$filename"
 
-echo "Extraction complete. Contents are in the 'rootfs' directory."
+# Check if rootfs.img exists in the extracted contents
+if [ ! -f "rootfs/rootfs.img" ]; then
+    echo "rootfs/rootfs.img not found!"
+    exit 1
+fi
+
+# Create mount point and extraction directory
+mount_point=$(mktemp -d)
+extracted_rootfs="extracted_rootfs"
+
+echo "Mounting EROFS image..."
+# Mount the EROFS image using erofsfuse
+erofsfuse "rootfs/rootfs.img" "$mount_point"
+
+# Wait a moment for the mount to be ready
+sleep 2
+
+# Copy contents to the extraction directory
+echo "Copying contents to $extracted_rootfs..."
+mkdir -p "$extracted_rootfs"
+cp -a "$mount_point"/* "$extracted_rootfs/"
+
+# Unmount
+fusermount -u "$mount_point"
+rmdir "$mount_point"
+
+echo "Extraction complete. EROFS contents are in the '$extracted_rootfs' directory."
