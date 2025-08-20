@@ -2,10 +2,9 @@ version: '3.8'
 services:
   haos:
     image: haos
-    cap_add:
-      - SYS_ADMIN
+    privileged: true
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     tmpfs:
       - /tmp
       - /run
@@ -13,11 +12,19 @@ services:
       - /var/lib/journal
       - /var/log
       - /var/tmp
+      - /var/lib/private
+      - /var/lib/systemd
+      - /var/lib/dbus
+      - /var/lib/machines
+      - /var/lib/portables
+      - /var/lib/hostname
+      - /var/lib/udev
     stop_signal: SIGRTMIN+3
     tty: true
     stdin_open: true
-    # Add read-only root filesystem and explicitly make certain paths writable
-    read_only: true
+    # Don't use read_only: true as it may be too restrictive
+    # read_only: true
     environment:
       - SYSTEMD_IGNORE_CHROOT=1
       - container=docker
+      - SYSTEMD_NSPAWN_API_VFS_WRITABLE=1
