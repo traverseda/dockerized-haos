@@ -9,6 +9,15 @@ services:
     tmpfs:
       - /tmp
       - /run
+      - /run/lock
+      - /var/lib/journal
+      - /var/log
+      - /var/tmp
     stop_signal: SIGRTMIN+3
     tty: true
     stdin_open: true
+    # Add read-only root filesystem and explicitly make certain paths writable
+    read_only: true
+    environment:
+      - SYSTEMD_IGNORE_CHROOT=1
+      - container=docker
