@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  haos:
+    image: haos
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /tmp
+      - /run
+    stop_signal: SIGRTMIN+3
+    tty: true
+    stdin_open: true
