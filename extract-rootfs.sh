@@ -3,6 +3,12 @@
 
 set -e
 
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run this script as root using sudo to preserve all file attributes"
+    exit 1
+fi
+
 rootfs_url="https://github.com/home-assistant/operating-system/releases/download/16.1/haos_generic-x86-64-16.1.raucb"
 filename=$(basename "$rootfs_url")
 
@@ -33,13 +39,15 @@ erofsfuse "rootfs/rootfs.img" "$mount_point"
 # Wait a moment for the mount to be ready
 sleep 2
 
-# Copy contents to the extraction directory
+# Copy contents to the extraction directory, preserving all attributes
 echo "Copying contents to $extracted_rootfs..."
 mkdir -p "$extracted_rootfs"
-cp -a "$mount_point"/* "$extracted_rootfs/"
+# Use rsync to better handle copying while preserving all attributes
+rsync -aAX "$mount_point"/ "$extracted_rootfs/"
 
 # Unmount
 fusermount -u "$mount_point"
 rmdir "$mount_point"
 
 echo "Extraction complete. EROFS contents are in the '$extracted_rootfs' directory."
+echo "All file attributes have been preserved."
