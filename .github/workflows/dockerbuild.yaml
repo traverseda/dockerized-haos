@@ -16,10 +16,11 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v31   
-    - uses: rrbutani/use-nix-shell-action@v1
-      with:
-        script: sudo ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
+    - uses: cachix/install-nix-action@v31
+
+    - name: Run privileged build
+      shell: 'nix develop -c sudo bash -e {0}'
+      run: sudo ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
 
     # Add any post-build steps here if needed
     # For example, to push to a registry:
