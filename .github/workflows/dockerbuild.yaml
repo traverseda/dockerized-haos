@@ -20,7 +20,7 @@ jobs:
     
     - name: Run privileged build
       shell: 'nix develop -c bash -e {0}'
-      run: sudo ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
+      run: sudo -E env "PATH=$PATH" ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
 
     # Add any post-build steps here if needed
     # For example, to push to a registry:
