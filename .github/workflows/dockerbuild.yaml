@@ -16,8 +16,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v31
-      shell: sudo bash -e {0}
+    - run: curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 
     - name: Run privileged build
       shell: 'sudo nix develop -c bash -e {0}'
