@@ -1,5 +1,4 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i bash -p bash jq curl erofsfuse unsquashfs rsync
+#! /usr/bin/env bash
 
 set -e
 
