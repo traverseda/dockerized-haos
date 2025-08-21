@@ -20,7 +20,7 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable      
     - name: Run privileged build
-      run: ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
+      run: sudo ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
 
     # Add any post-build steps here if needed
     # For example, to push to a registry:
