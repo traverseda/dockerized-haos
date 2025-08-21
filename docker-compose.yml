@@ -2,29 +2,22 @@ version: '3.8'
 services:
   haos:
     image: haos
-    privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    # privileged: true  # Commented out - replaced with granular options below
+    cap_add:
+      - ALL  # Grants all Linux capabilities (equivalent to privileged for capabilities)
+    security_opt:
+      - seccomp:unconfined  # Disables seccomp filtering (part of privileged mode)
+      - apparmor:unconfined  # Disables AppArmor (if applicable)
+    cgroup: host  # Share host's cgroup namespace - required for systemd
     tmpfs:
-      - /tmp
-      - /run
-      - /run/lock
-      - /var/lib/journal
-      - /var/log
-      - /var/tmp
-      - /var/lib/private
-      - /var/lib/systemd
-      - /var/lib/dbus
-      - /var/lib/machines
-      - /var/lib/portables
-      - /var/lib/hostname
-      - /var/lib/udev
+      - /run:rw,noexec,nosuid,size=100m  # Systemd runtime directory
+      - /tmp:rw,noexec,nosuid,size=100m  # Temporary filesystem
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw  # Required for systemd containers
+      - ./data:/mnt/data
+      #- ./data_docker:/var/lib/docker
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker socket for supervisor
     stop_signal: SIGRTMIN+3
     tty: true
     stdin_open: true
-    # Don't use read_only: true as it may be too restrictive
-    # read_only: true
-    environment:
-      - SYSTEMD_IGNORE_CHROOT=1
-      - container=docker
-      - SYSTEMD_NSPAWN_API_VFS_WRITABLE=1
+
