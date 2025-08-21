@@ -11,28 +11,24 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
     - name: Run privileged build
-      uses: addnab/docker-run-action@v3
-      with:
-        image: ubuntu:latest
-        options: |
-          --privileged
-          --volume ${{ github.workspace }}:/workspace
-          --workdir /workspace
-        run: |
-          # Install necessary tools
-          apt-get update
-          apt-get install -y erofs-utils squashfs-tools curl rsync
-          
-          # Make scripts executable
-          chmod +x build-haos-image.sh
-          chmod +x extract-rootfs.sh
-          
-          # Run the build script
-          ./build-haos-image.sh
+      run: |
+        docker run --rm --privileged \
+          -v ${{ github.workspace }}:/workspace \
+          -w /workspace \
+          ubuntu:latest \
+          bash -c "
+            # Install necessary tools
+            apt-get update
+            apt-get install -y erofs-utils squashfs-tools curl rsync
+            
+            # Make scripts executable
+            chmod +x build-haos-image.sh
+            chmod +x extract-rootfs.sh
+            
+            # Run the build script
+            ./build-haos-image.sh
+          "
           
     - name: Push to GitHub Packages
       # Add this step if you want to push the image to a registry
