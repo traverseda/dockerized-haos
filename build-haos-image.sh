@@ -8,13 +8,17 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Run the extraction script
+# Get the release tag from the first argument, or use latest
+RELEASE_TAG=${1:-latest}
+echo "Building for release: $RELEASE_TAG"
+
+# Run the extraction script with the release tag
 echo "Running extraction script..."
-./extract-rootfs.sh
+./extract-rootfs.sh "$RELEASE_TAG"
 
 # Build the Docker image
 echo "Building Docker image..."
-docker build -t haos .
+docker build -t haos:$RELEASE_TAG -t haos:latest .
 
 # Clean up the extracted files
 echo "Cleaning up extracted files..."
