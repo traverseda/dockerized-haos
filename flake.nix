@@ -18,7 +18,6 @@
           erofs-utils
           squashfsTools
           rsync
-          docker
         ];
       };
     };
