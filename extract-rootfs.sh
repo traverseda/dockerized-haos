@@ -1,5 +1,4 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i bash -p erofs-utils bash curl squashfsTools rsync jq
+#! /usr/bin/env bash
 
 set -e
 
