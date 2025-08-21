@@ -16,7 +16,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - run: curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+    - uses: DeterminateSystems/determinate-nix-action@v3      
 
     - name: Run privileged build
       shell: 'sudo nix develop -c bash -e {0}'
