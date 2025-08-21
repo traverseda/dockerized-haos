@@ -19,8 +19,10 @@ jobs:
     - uses: cachix/install-nix-action@v31
       with:
         nix_path: nixpkgs=channel:nixos-unstable   
-        with:
-          devShell: .#default # this is the default
+    - uses: rrbutani/use-nix-shell-action@v1
+      with:
+        devShell: .#default # this is the default
+
     - name: Run privileged build
       run: sudo ./build-haos-image.sh ${{ github.event.inputs.release_tag }}
 
